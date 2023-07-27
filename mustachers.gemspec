@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.extensions = ['ext/mustachers/Cargo.toml']
 
   spec.add_development_dependency 'rspec', '~> 3.12'
+  spec.add_development_dependency 'mustache', '~> 1.1'
 end

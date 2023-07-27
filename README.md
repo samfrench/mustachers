@@ -1,31 +1,56 @@
 # Mustachers
 
-TODO: Delete this and the text below, and describe your gem
+Providing mustache rendering using Rust by wrapping the mustache crate.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mustachers`. To experiment with that code, run `bin/console` for an interactive prompt.
+At the moment only a simple render function taking a template file and parameters to interpolate. This does not look to replace or compete with the ruby offering, but provides an alternative seemingly offering a performance enhancement.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ bundle add mustachers
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ gem install mustachers
 
 ## Usage
 
-TODO: Write usage instructions here
+Require the gem if needed. Some might be dynamically loaded.
+```rb
+require 'mustachers'
+
+```
+
+An example of using the gem.
+```rb
+Mustachers::Renderer.render("<h1>{{text}}</h1>", {text: "abc123"})
+```
+
+From the console.
+```sh
+bundle exec ruby -r mustachers -e 'puts Mustachers::Renderer.render("<h1>{{text}}</h1>", {text: "abc123"})'
+<h1>abc123</h1>
+```
+
+## Benchmark
+The script for this can be found in the [benchmarks directory](./benchmarks/simple.rb).
+```sh
+bundle exec ruby benchmarks/simple.rb
+       user     system      total        real
+ 236.928979   1.059659 237.988638 (239.572824) # ruby
+  13.929279   0.069823  13.999102 ( 14.088116) # rust
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+TODO:
+- [ ] Check Ruby performance such as any memory leaks and garbage collection.
+- [ ] Improve the error handling to raise an appropriate error.
+- [ ] Unit tests in rust to provide faster feedback while developing.
+- [ ] More options for the template rendering such as reading the file.
+- [ ] Benchmarking with different sized inputs.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mustachers.
+Bug reports and pull requests are welcome on GitHub at https://github.com/samfrench/mustachers.
