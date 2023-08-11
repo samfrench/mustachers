@@ -1,11 +1,12 @@
-extern crate mustache;
-
+use magnus::{
+    define_module, exception::runtime_error, function, prelude::*, r_hash::ForEach, Error, RHash,
+    Symbol,
+};
 use std::collections::HashMap;
-use magnus::{define_module, prelude::*, Error, function, RHash, Symbol, r_hash::ForEach};
 
-fn render(template: String, params: RHash) -> Result<String, Error> {
-    let template = mustache::compile_str(&template).expect("Failed to compile");
-    let mut bytes = vec![];
+mod renderer;
+
+pub fn wrapper(template: String, params: RHash) -> Result<String, Error> {
     let mut data: HashMap<String, String> = HashMap::new();
 
     params.foreach(|key: Symbol, value: String| {
@@ -14,16 +15,16 @@ fn render(template: String, params: RHash) -> Result<String, Error> {
         return Ok(ForEach::Continue);
     })?;
 
-    template.render(&mut bytes, &data).expect("Failed to render");
-
-    return Ok(String::from_utf8(bytes).expect("Failed to encode string"));
+    return renderer::render(template, data)
+        .map_err(|e| Error::new(runtime_error(), e.to_string()));
 }
 
 #[magnus::init]
 fn init() -> Result<(), Error> {
     let mustachers_module = define_module("Mustachers")?;
     let renderer_module = mustachers_module.define_module("Renderer")?;
-    renderer_module.define_singleton_method("render", function!(render, 2))?;
+
+    renderer_module.define_singleton_method("render", function!(wrapper, 2))?;
 
     Ok(())
 }

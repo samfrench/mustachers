@@ -2,11 +2,12 @@
 name = "mustachers"
 version = "0.1.0"
 edition = "2021"
-authors = ["Sam French <Sam.French@bbc.co.uk>"]
+authors = ["Sam French"]
 publish = false
 
 [lib]
 crate-type = ["cdylib"]
+name = "mustachers"
 
 [dependencies]
 magnus = { version = "0.4" }
