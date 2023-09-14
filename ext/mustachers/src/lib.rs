@@ -1,6 +1,6 @@
 use magnus::{
     define_module, exception::runtime_error, function, prelude::*, r_hash::ForEach, Error, RHash,
-    Symbol,
+    Symbol, Value,
 };
 use std::collections::HashMap;
 
@@ -9,8 +9,8 @@ mod renderer;
 pub fn wrapper(template: String, params: RHash) -> Result<String, Error> {
     let mut data: HashMap<String, String> = HashMap::new();
 
-    params.foreach(|key: Symbol, value: String| {
-        data.insert(key.to_string(), value);
+    params.foreach(|key: Symbol, value: Value| {
+        data.insert(key.to_string(), value.to_string());
 
         return Ok(ForEach::Continue);
     })?;

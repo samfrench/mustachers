@@ -18,7 +18,8 @@ RSpec.describe Mustachers do
       middle: '<p>Paragraph of text.</p>',
       bottom: '<a href="#about">Page link</a>',
       lang: 'en-GB',
-      foo:  'bar'
+      foo:  'bar',
+      null_value: nil
     }
 
     expect(
