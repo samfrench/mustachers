@@ -1,22 +1,17 @@
-use magnus::{
-    define_module, exception::runtime_error, function, prelude::*, r_hash::ForEach, Error, RHash,
-    Symbol, Value,
-};
+use magnus::{define_module, exception::runtime_error, function, prelude::*, r_hash::ForEach, Error, RHash, Symbol, Value};
 use std::collections::HashMap;
-
 mod renderer;
 
 pub fn wrapper(template: String, params: RHash) -> Result<String, Error> {
-    let mut data: HashMap<String, String> = HashMap::new();
+    let mut data: HashMap<String, String> = HashMap::with_capacity(params.len());
 
     params.foreach(|key: Symbol, value: Value| {
         data.insert(key.to_string(), value.to_string());
-
-        return Ok(ForEach::Continue);
+        Ok(ForEach::Continue)
     })?;
 
-    return renderer::render(template, data)
-        .map_err(|e| Error::new(runtime_error(), e.to_string()));
+    renderer::render(&template, &data)
+        .map_err(|e| Error::new(runtime_error(), e.to_string()))
 }
 
 #[magnus::init]
