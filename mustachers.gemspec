@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary = 'Mustache templating with Rust'
   spec.description = 'Mustache templating with Rust to test performance'
   spec.homepage = 'https://github.com/samfrench/mustachers'
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = '>= 3.2.0'
   spec.required_rubygems_version = '>= 3.3.11'
 
   spec.metadata['homepage_uri'] = spec.homepage
@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.extensions = ['ext/mustachers/Cargo.toml']
 
-  spec.add_development_dependency 'rspec', '~> 3.12'
+  spec.add_development_dependency 'rspec', '~> 3.13'
   spec.add_development_dependency 'mustache', '~> 1.1'
 end

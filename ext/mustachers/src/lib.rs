@@ -1,12 +1,9 @@
-use magnus::{
-    define_module, exception::runtime_error, function, prelude::*, r_hash::ForEach, Error, RHash,
-    Symbol, Value,
-};
+use magnus::{function, prelude::*, r_hash::ForEach, Error, RHash, RModule, Ruby, Symbol, Value};
 use std::collections::HashMap;
 
 mod renderer;
 
-pub fn wrapper(template: String, params: RHash) -> Result<String, Error> {
+pub fn wrapper(ruby: &Ruby, template: String, params: RHash) -> Result<String, Error> {
     let mut data: HashMap<String, String> = HashMap::new();
 
     params.foreach(|key: Symbol, value: Value| {
@@ -16,13 +13,13 @@ pub fn wrapper(template: String, params: RHash) -> Result<String, Error> {
     })?;
 
     return renderer::render(template, data)
-        .map_err(|e| Error::new(runtime_error(), e.to_string()));
+        .map_err(|e: std::fmt::Error| Error::new(ruby.exception_runtime_error(), e.to_string()));
 }
 
 #[magnus::init]
-fn init() -> Result<(), Error> {
-    let mustachers_module = define_module("Mustachers")?;
-    let renderer_module = mustachers_module.define_module("Renderer")?;
+fn init(ruby: &Ruby) -> Result<(), Error> {
+    let mustachers_module: RModule = ruby.define_module("Mustachers")?;
+    let renderer_module: RModule = mustachers_module.define_module("Renderer")?;
 
     renderer_module.define_singleton_method("render", function!(wrapper, 2))?;
 

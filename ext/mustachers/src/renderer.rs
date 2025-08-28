@@ -1,11 +1,13 @@
 use core::fmt::Error;
 use std::collections::HashMap;
 
+use mustache::{compile_str, Template};
+
 extern crate mustache;
 
 pub fn render(template: String, params: HashMap<String, String>) -> Result<String, Error> {
-    let template = mustache::compile_str(&template).expect("Failed to compile");
-    let mut bytes = vec![];
+    let template: Template = compile_str(&template).expect("Failed to compile");
+    let mut bytes: Vec<u8> = vec![];
 
     template
         .render(&mut bytes, &params)
@@ -21,9 +23,9 @@ mod tests {
 
     #[test]
     fn it_interpolates_correctly() {
-        let template =
+        let template: String =
             String::from("<html lang=\"{{{lang}}}\"/>{{{ top }}}{{{ middle }}}{{{ bottom }}}");
-        let params = HashMap::from([
+        let params: HashMap<String, String> = HashMap::from([
             (String::from("top"), String::from("<h1>Page heading</h1>")),
             (
                 String::from("middle"),
@@ -37,7 +39,7 @@ mod tests {
             (String::from("foo"), String::from("bar")),
         ]);
 
-        let result = render(template, params).unwrap();
+        let result: String = render(template, params).unwrap();
         assert_eq!(result, "<html lang=\"en-GB\"/><h1>Page heading</h1><p>Paragraph of text.</p><a href=\"#about\">Page link</a>");
     }
 }

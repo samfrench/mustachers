@@ -10,5 +10,5 @@ crate-type = ["cdylib"]
 name = "mustachers"
 
 [dependencies]
-magnus = { version = "0.4" }
+magnus = { version = "0.8" }
 mustache = "0.9.0"
